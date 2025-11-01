@@ -1,18 +1,16 @@
-package com.sistema.contas;
+package com.sistema.contas.model;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name="contas_sanepar",schema="sistema")
-public class ContasSanepar implements Serializable {
-    
+@Table(name ="contas_sercomtel", schema ="sistema")
+public class ContaSercomtel implements Serializable{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,7 +20,6 @@ public class ContasSanepar implements Serializable {
 
     @NotBlank
     private Integer ano;
-
     @NotBlank
     private Date vencimento;
 
@@ -31,8 +28,8 @@ public class ContasSanepar implements Serializable {
     private BigDecimal valor;
 
     @NotBlank
-    @Column(name="m3",precision = 10, scale = 2)
-    private BigDecimal m3;
+    @Column(name="nota_fiscal")
+    private String notaFiscal;
 
     @NotBlank
     @Column(name="numero_protocolo")
@@ -47,8 +44,8 @@ public class ContasSanepar implements Serializable {
     private Character contaInativa;
 
     @ManyToOne
-    @JoinColumn(name="local_sanepar_id", nullable = false)
-    private LocalSanepar localSanepar;
+    @JoinColumn(name="local_sercomtel_id", nullable = false)
+    private LocalSercomtel localSercomtel;
 
     public Integer getId () {
         return id;
@@ -93,12 +90,12 @@ public class ContasSanepar implements Serializable {
         this.valor = valor;
     }
 
-    public BigDecimal getM3 () {
-        return m3;
+    public String getNotaFiscal () {
+        return notaFiscal;
     }
 
-    public void setM3 (BigDecimal m3) {
-        this.m3 = m3;
+    public void setNotaFiscal (String notaFiscal) {
+        this.notaFiscal = notaFiscal;
     }
 
     public String getNumeroProtocolo () {
@@ -123,5 +120,13 @@ public class ContasSanepar implements Serializable {
 
     public void setContaInativa (Character contaInativa) {
         this.contaInativa = contaInativa;
+    }
+
+    public LocalSercomtel getLocalSercomtel () {
+        return localSercomtel;
+    }
+
+    public void setLocalSercomtel (LocalSercomtel localSercomtel) {
+        this.localSercomtel = localSercomtel;
     }
 }

@@ -1,4 +1,4 @@
-package com.sistema.contas;
+package com.sistema.contas.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -31,7 +31,7 @@ public class LocalSercomtel implements Serializable{
     private String orgao;
 
     @OneToMany(mappedBy ="localSercomtel")
-    private List<ContasSercomtel> contas;
+    private List<ContaSercomtel> contas;
 
     public Integer getId() {
         return id;
@@ -45,7 +45,7 @@ public class LocalSercomtel implements Serializable{
         return tipo;
     }
 
-    public void setTipo() {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
@@ -69,7 +69,7 @@ public class LocalSercomtel implements Serializable{
         return telefone;
     }
 
-    public void setTelefone() {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 

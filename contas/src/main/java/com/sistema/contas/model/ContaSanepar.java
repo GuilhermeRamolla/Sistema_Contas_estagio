@@ -1,18 +1,16 @@
-package com.sistema.contas;
+package com.sistema.contas.model;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name="contas_copel", schema="sistema")
-public class ContasCopel implements Serializable{
-
+@Table(name="contas_sanepar",schema="sistema")
+public class ContaSanepar implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -31,16 +29,8 @@ public class ContasCopel implements Serializable{
     private BigDecimal valor;
 
     @NotBlank
-    @Column(name="kwh_ponta", precision = 10, scale = 2)
-    private BigDecimal kwhPonta;
-
-    @NotBlank
-    @Column(name="kwh_fora", precision = 10, scale = 2)
-    private BigDecimal kwhFora;
-
-    @NotBlank
-    @Column(name="kwh_total", precision = 10, scale = 2)
-    private BigDecimal kwhTotal;
+    @Column(name="m3",precision = 10, scale = 2)
+    private BigDecimal m3;
 
     @NotBlank
     @Column(name="numero_protocolo")
@@ -55,8 +45,8 @@ public class ContasCopel implements Serializable{
     private Character contaInativa;
 
     @ManyToOne
-    @JoinColumn(name="local_copel_id", nullable = false)
-    private LocalCopel localCopel;
+    @JoinColumn(name="local_sanepar_id", nullable = false)
+    private LocalSanepar localSanepar;
 
     public Integer getId () {
         return id;
@@ -101,28 +91,12 @@ public class ContasCopel implements Serializable{
         this.valor = valor;
     }
 
-    public BigDecimal getKwhPonta () {
-        return kwhPonta;
+    public BigDecimal getM3 () {
+        return m3;
     }
 
-    public void setKwhPonta (BigDecimal kwhPonta) {
-        this.kwhPonta = kwhPonta;
-    }
-
-    public BigDecimal getKwhFora () {
-        return kwhFora;
-    }
-
-    public void setKwhFora (BigDecimal kwhFora) {
-        this.kwhFora = kwhFora;
-    }
-
-    public BigDecimal getKwhTotal () {
-        return kwhTotal;
-    }
-
-    public void setKwhTotal (BigDecimal kwhTotal) {
-        this.kwhTotal = kwhTotal;
+    public void setM3 (BigDecimal m3) {
+        this.m3 = m3;
     }
 
     public String getNumeroProtocolo () {
@@ -147,5 +121,13 @@ public class ContasCopel implements Serializable{
 
     public void setContaInativa (Character contaInativa) {
         this.contaInativa = contaInativa;
+    }
+
+    public LocalSanepar getLocalSanepar() {
+        return localSanepar;
+    }
+
+    public void setLocalSanepar(LocalSanepar localSanepar) {
+        this.localSanepar = localSanepar;
     }
 }

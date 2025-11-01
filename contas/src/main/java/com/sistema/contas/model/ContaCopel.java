@@ -1,17 +1,15 @@
-package com.sistema.contas;
+package com.sistema.contas.model;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name ="contas_sercomtel", schema ="sistema")
-public class ContasSercomtel implements Serializable{
+@Table(name="contas_copel", schema="sistema")
+public class ContaCopel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +20,7 @@ public class ContasSercomtel implements Serializable{
 
     @NotBlank
     private Integer ano;
+
     @NotBlank
     private Date vencimento;
 
@@ -30,8 +29,16 @@ public class ContasSercomtel implements Serializable{
     private BigDecimal valor;
 
     @NotBlank
-    @Column(name="nota_fiscal")
-    private String notaFiscal;
+    @Column(name="kwh_ponta", precision = 10, scale = 2)
+    private BigDecimal kwhPonta;
+
+    @NotBlank
+    @Column(name="kwh_fora", precision = 10, scale = 2)
+    private BigDecimal kwhFora;
+
+    @NotBlank
+    @Column(name="kwh_total", precision = 10, scale = 2)
+    private BigDecimal kwhTotal;
 
     @NotBlank
     @Column(name="numero_protocolo")
@@ -46,8 +53,8 @@ public class ContasSercomtel implements Serializable{
     private Character contaInativa;
 
     @ManyToOne
-    @JoinColumn(name="local_sercomtel_id", nullable = false)
-    private LocalSercomtel localSercomtel;
+    @JoinColumn(name="local_copel_id", nullable = false)
+    private LocalCopel localCopel;
 
     public Integer getId () {
         return id;
@@ -92,12 +99,28 @@ public class ContasSercomtel implements Serializable{
         this.valor = valor;
     }
 
-    public String getNotaFiscal () {
-        return notaFiscal;
+    public BigDecimal getKwhPonta () {
+        return kwhPonta;
     }
 
-    public void setNotaFiscal (String notaFiscal) {
-        this.notaFiscal = notaFiscal;
+    public void setKwhPonta (BigDecimal kwhPonta) {
+        this.kwhPonta = kwhPonta;
+    }
+
+    public BigDecimal getKwhFora () {
+        return kwhFora;
+    }
+
+    public void setKwhFora (BigDecimal kwhFora) {
+        this.kwhFora = kwhFora;
+    }
+
+    public BigDecimal getKwhTotal () {
+        return kwhTotal;
+    }
+
+    public void setKwhTotal (BigDecimal kwhTotal) {
+        this.kwhTotal = kwhTotal;
     }
 
     public String getNumeroProtocolo () {
@@ -122,5 +145,13 @@ public class ContasSercomtel implements Serializable{
 
     public void setContaInativa (Character contaInativa) {
         this.contaInativa = contaInativa;
+    }
+
+    public LocalCopel getLocalCopel() {
+        return localCopel;
+    }
+
+    public void setLocalCopel(LocalCopel localCopel) {
+        this.localCopel = localCopel;
     }
 }

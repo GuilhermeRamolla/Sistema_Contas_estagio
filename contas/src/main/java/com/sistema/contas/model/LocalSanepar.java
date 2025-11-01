@@ -1,4 +1,4 @@
-package com.sistema.contas;
+package com.sistema.contas.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name="locais_copel", schema="sistema")
-public class LocalCopel implements Serializable{
-    
+@Table(name="locais_sanepar", schema="sistema")
+public class LocalSanepar implements Serializable{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,14 +18,14 @@ public class LocalCopel implements Serializable{
     private String endereco;
 
     @NotBlank
-    @Column(name="id_copel")
-    private Integer idCopel;
+    @Column(name="matricula_sanepar")
+    private Integer matriculaSanepar;
 
     @NotBlank
     private String orgao;
 
-    @OneToMany(mappedBy = "localCopel")
-    private List<ContasCopel> contas;
+    @OneToMany(mappedBy = "localSanepar")
+    private List<ContaSanepar> contas;
 
     public Integer getId() {
         return id;
@@ -43,12 +43,12 @@ public class LocalCopel implements Serializable{
         this.endereco = endereco;
     }
 
-    public Integer getIdCopel() {
-        return idCopel;
+    public Integer getMatriculaSanepar() {
+        return matriculaSanepar;
     }
 
-    public void setIdCopel(Integer idCopel) {
-        this.idCopel = idCopel;
+    public void setMatriculaSanepar(Integer matriculaSanepar) {
+        this.matriculaSanepar = matriculaSanepar;
     }
 
     public String getOrgao() {
@@ -58,4 +58,6 @@ public class LocalCopel implements Serializable{
     public void setOrgao(String orgao) {
         this.orgao = orgao;
     }
+
+    
 }
