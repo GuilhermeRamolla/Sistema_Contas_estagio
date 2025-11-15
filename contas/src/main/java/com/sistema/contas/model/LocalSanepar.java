@@ -58,6 +58,5 @@ public class LocalSanepar implements Serializable{
     public void setOrgao(String orgao) {
         this.orgao = orgao;
     }
-
     
 }

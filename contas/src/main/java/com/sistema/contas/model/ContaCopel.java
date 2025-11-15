@@ -2,10 +2,11 @@ package com.sistema.contas.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="contas_copel", schema="sistema")
@@ -15,28 +16,25 @@ public class ContaCopel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
     private Integer mes;
 
-    @NotBlank
     private Integer ano;
 
-    @NotBlank
-    private Date vencimento;
+    private LocalDate vencimento;
 
-    @NotBlank
+    @NotNull
     @Column(precision = 10, scale = 2)
     private BigDecimal valor;
 
-    @NotBlank
+    @NotNull
     @Column(name="kwh_ponta", precision = 10, scale = 2)
     private BigDecimal kwhPonta;
 
-    @NotBlank
+    @NotNull
     @Column(name="kwh_fora", precision = 10, scale = 2)
     private BigDecimal kwhFora;
 
-    @NotBlank
+    @NotNull
     @Column(name="kwh_total", precision = 10, scale = 2)
     private BigDecimal kwhTotal;
 
@@ -44,11 +42,9 @@ public class ContaCopel implements Serializable{
     @Column(name="numero_protocolo")
     private String numeroProtocolo;
 
-    @NotBlank
     @Column(name="data_envio_pagamento")
-    private Date dataEnvioPagamento;
+    private LocalDate dataEnvioPagamento;
 
-    @NotBlank
     @Column(name="conta_inativa")
     private Character contaInativa;
 
@@ -80,11 +76,11 @@ public class ContaCopel implements Serializable{
         this.ano = ano;
     }
 
-    public Date getVencimento () {
+    public LocalDate getVencimento () {
         return vencimento;
     }
 
-    public void setVencimento (Date vencimento) {
+    public void setVencimento (LocalDate vencimento) {
         this.vencimento = vencimento;
     }
 
@@ -131,11 +127,11 @@ public class ContaCopel implements Serializable{
         this.numeroProtocolo = numeroProtocolo;
     }
 
-    public Date getDataEnvioPagamento () {
+    public LocalDate getDataEnvioPagamento () {
         return dataEnvioPagamento;
     }
 
-    public void setDataEnvioPagamento (Date dataEnvioPagamento) {
+    public void setDataEnvioPagamento (LocalDate dataEnvioPagamento) {
         this.dataEnvioPagamento = dataEnvioPagamento;
     }
 

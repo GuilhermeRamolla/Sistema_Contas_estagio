@@ -22,7 +22,7 @@ public class LocalSercomtel implements Serializable{
 
     @NotBlank
     @Column(name="inscricao_sercomtel")
-    private Integer inscricaoSercomtel;
+    private String inscricaoSercomtel;
 
     @NotBlank
     private String telefone;
@@ -57,11 +57,11 @@ public class LocalSercomtel implements Serializable{
         this.endereco = endereco;
     }
 
-    public Integer getInscricaoSercomtel() {
+    public String getInscricaoSercomtel() {
         return inscricaoSercomtel;
     }
 
-    public void setInscricaoSercomtel(Integer inscricaoSercomtel) {
+    public void setInscricaoSercomtel(String inscricaoSercomtel) {
         this.inscricaoSercomtel = inscricaoSercomtel;
     }
 

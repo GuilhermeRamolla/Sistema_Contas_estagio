@@ -19,7 +19,7 @@ public class LocalCopel implements Serializable{
 
     @NotBlank
     @Column(name="id_copel")
-    private Integer idCopel;
+    private String idCopel;
 
     @NotBlank
     private String orgao;
@@ -43,11 +43,11 @@ public class LocalCopel implements Serializable{
         this.endereco = endereco;
     }
 
-    public Integer getIdCopel() {
+    public String getIdCopel() {
         return idCopel;
     }
 
-    public void setIdCopel(Integer idCopel) {
+    public void setIdCopel(String idCopel) {
         this.idCopel = idCopel;
     }
 
