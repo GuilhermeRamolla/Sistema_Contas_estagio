@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contas</title>
+    <style>
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-filter {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-apply {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-clear {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .filter-toggle {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .filter-content {
+            display: none;
+        }
+
+        .filter-content.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="lista-contas-page">
+<div class="page-wrapper">
+    <div class="top-section">
+        <h1>Contas</h1>
+        <div class="actions">
+            <div style="position: relative;">
+                <button class="btn" onclick="toggle('dropdown1')">Adicionar Conta</button>
+                <div id="dropdown1" class="dropdown">
+                    <a th:href="@{/nova-conta-copel}">Copel</a>
+                    <a th:href="@{/nova-conta-sanepar}">Sanepar</a>
+                    <a th:href="@{/nova-conta-sercomtel}">Sercomtel</a>
+                </div>
+            </div>
+            <div style="position: relative;">
+                <button class="btn" onclick="toggle('dropdown2')">Adicionar Local</button>
+                <div id="dropdown2" class="dropdown">
+                    <a th:href="@{/novo-local-copel}">Copel</a>
+                    <a th:href="@{/novo-local-sanepar}">Sanepar</a>
+                    <a th:href="@{/novo-local-sercomtel}">Sercomtel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Filtros -->
+    <button class="filter-toggle" onclick="toggleFilters()">
+        Filtros
+    </button>
+
+    <div id="filterContent" class="filter-content">
+        <div class="filter-section">
+            <form method="get" th:action="@{/}" class="filter-form">
+                <div class="filter-group">
+                    <label>Vencimento (de):</label>
+                    <input type="date" name="dataVencimentoInicio"
+                           th:value="${filtros.dataVencimentoInicio}">
+                </div>
+
+                <div class="filter-group">
+                    <label>Vencimento (até):</label>
+                    <input type="date" name="dataVencimentoFim"
+                           th:value="${filtros.dataVencimentoFim}">
+                </div>
+
+                <div class="filter-group">
+                    <label>ID Copel:</label>
+                    <input type="text" name="idCopel"
+                           placeholder="Ex: 123456"
+                           th:value="${filtros.idCopel}">
+                </div>
+
+                <div class="filter-group">
+                    <label>Matrícula Sanepar:</label>
+                    <input type="text" name="matriculaSanepar"
+                           placeholder="Ex: 789012"
+                           th:value="${filtros.matriculaSanepar}">
+                </div>
+
+                <div class="filter-group">
+                    <label>Inscrição Sercomtel:</label>
+                    <input type="text" name="inscricaoSercomtel"
+                           placeholder="Ex: 345678"
+                           th:value="${filtros.inscricaoSercomtel}">
+                </div>
+
+                <div class="filter-buttons">
+                    <button type="submit" class="btn-filter btn-apply">Aplicar</button>
+                    <button type="button" class="btn-filter btn-clear" onclick="limparFiltros()">Limpar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <div class="table-header">
+            <div>Órgão</div>
+            <div>Endereço</div>
+            <div>Período</div>
+            <div>Valor</div>
+            <div>Status</div>
+        </div>
+
+        <a th:each="conta : ${contas}"
+           th:href="@{'/conta/' + ${conta.grupo} + '/' + ${conta.id}}"
+           class="table-row">
+            <div class="cell">
+                <div class="cell-title" th:text="${conta.grupo} + ' - ' + ${conta.orgao}"></div>
+            </div>
+            <div class="cell">
+                <div th:text="${conta.endereco}"></div>
+            </div>
+            <div class="cell" th:text="${conta.mes} + '/' + ${conta.ano}"></div>
+            <div class="cell cell-title" th:text="'R$ ' + ${conta.valor}"></div>
+            <div class="cell">
+                <span class="badge"
+                      th:classappend="${conta.status == 'PAGA'} ? 'badge-paga' : (${conta.status == 'PENDENTE'} ? 'badge-pendente' : 'badge-vencida')"
+                      th:text="${conta.status}">
+                </span>
+            </div>
+        </a>
+    </div>
+</div>
+
+<script>
+    function toggle(id) {
+        const dropdown = document.getElementById(id);
+        const allDropdowns = document.querySelectorAll('.dropdown');
+
+        allDropdowns.forEach(d => {
+            if (d.id !== id) d.classList.remove('show');
+        });
+
+        dropdown.classList.toggle('show');
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.btn') && !e.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('show');
+            });
+        }
+    });
+
+    function toggleFilters() {
+        const filterContent = document.getElementById('filterContent');
+        filterContent.classList.toggle('show');
+    }
+
+    function limparFiltros() {
+        window.location.href = '/';
+    }
+</script>
+</body>
+</html>

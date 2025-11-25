@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Local</title>
+    
+</head>
+<body>
+
+<div class="container">
+    <h2>Novo Local Sanepar</h2>
+
+    <form th:action="@{'/adicionar-local-sanepar'}" th:object="${local}" method="post">
+
+        <!-- MENSAGENS DE ERRO -->
+        <div th:if="${#fields.hasErrors('*')}" class="erro-validacao">
+            <h3>Erros de validação:</h3>
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="matriculaSanepar">Matrícula:</label>
+            <input type="text" th:field="*{matriculaSanepar}" id="matriculaSanepar">
+            <span th:if="${#fields.hasErrors('matriculaSanepar')}" th:errors="*{matriculaSanepar}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="orgao">Órgão:</label>
+            <input type="text" th:field="*{orgao}" id="orgao">
+            <span th:if="${#fields.hasErrors('orgao')}" th:errors="*{orgao}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="endereco">Endereço:</label>
+            <input type="text" th:field="*{endereco}" id="endereco">
+            <span th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}" class="erro-campo"></span>
+        </div>
+
+        <div class="botoes">
+            <button type="submit" class="botao botao-submit">Adicionar</button>
+            <a href="/index" class="botao botao-voltar">Voltar</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

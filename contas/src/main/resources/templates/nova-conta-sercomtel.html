@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Conta</title>
+    
+</head>
+<body>
+
+<div class="container">
+    <h2>Nova Conta Sercomtel</h2>
+
+    <form th:action="@{'/adicionar-conta-sercomtel'}" th:object="${conta}" method="post">
+
+        <!-- MENSAGENS DE ERRO -->
+        <div th:if="${#fields.hasErrors('*')}" class="erro-validacao">
+            <h3>Erros de validação:</h3>
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="inscricaoSercomtel">Número de inscrição:</label>
+            <input type="text" th:field="*{localSercomtel.inscricaoSercomtel}" id="inscricaoSercomtel">
+            <span th:if="${#fields.hasErrors('localSercomtel.inscricaoSercomtel')}" th:errors="*{localSercomtel.inscricaoSercomtel}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="mesAno">Mês e ano:</label>
+            <input type="month" id="mesAno" required>
+            <input type="hidden" th:field="*{mes}" id="mes">
+            <input type="hidden" th:field="*{ano}" id="ano">
+            <span th:if="${#fields.hasErrors('mes')}" th:errors="*{mes}" class="erro-campo"></span>
+            <span th:if="${#fields.hasErrors('ano')}" th:errors="*{ano}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="vencimento">Vencimento:</label>
+            <input type="date" th:field="*{vencimento}" id="vencimento">
+            <span th:if="${#fields.hasErrors('vencimento')}" th:errors="*{vencimento}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="valor">Valor:</label>
+            <input type="text" th:field="*{valor}" id="valor">
+            <span th:if="${#fields.hasErrors('valor')}" th:errors="*{valor}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="notaFiscal">Nota fiscal:</label>
+            <input type="text" th:field="*{notaFiscal}" id="notaFiscal">
+            <span th:if="${#fields.hasErrors('notaFiscal')}" th:errors="*{notaFiscal}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="numProtocolo">Número de Protocolo:</label>
+            <input type="text" th:field="*{numeroProtocolo}" id="numProtocolo">
+            <span th:if="${#fields.hasErrors('numeroProtocolo')}" th:errors="*{numeroProtocolo}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="dataEnvioPagamento">Data de envio do pagamento:</label>
+            <input type="date" th:field="*{dataEnvioPagamento}" id="dataEnvioPagamento">
+            <span th:if="${#fields.hasErrors('dataEnvioPagamento')}" th:errors="*{dataEnvioPagamento}" class="erro-campo"></span>
+        </div>
+
+        <div class="campo-grupo">
+            <label for="contaInativa">Status da conta:</label>
+            <select th:field="*{contaInativa}" id="contaInativa">
+                <option value="N">Ativa</option>
+                <option value="S">Inativa</option>
+            </select>
+        </div>
+
+        <div class="botoes">
+            <button type="submit" class="botao botao-submit">Adicionar</button>
+            <a href="/index" class="botao botao-voltar">Voltar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    const campoMesAno = document.getElementById("mesAno");
+    const campoMes = document.getElementById("mes");
+    const campoAno = document.getElementById("ano");
+
+    campoMesAno.addEventListener("change", function () {
+        const [ano, mes] = this.value.split("-");
+        campoMes.value = mes;
+        campoAno.value = ano;
+    });
+
+    document.querySelector("form").addEventListener("submit", function () {
+        if (campoMesAno.value) {
+            const [ano, mes] = campoMesAno.value.split("-");
+            campoMes.value = mes;
+            campoAno.value = ano;
+        }
+    });
+</script>
+
+</body>
+</html>

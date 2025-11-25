@@ -19,7 +19,7 @@ public class LocalSanepar implements Serializable{
 
     @NotBlank
     @Column(name="matricula_sanepar")
-    private Integer matriculaSanepar;
+    private String matriculaSanepar;
 
     @NotBlank
     private String orgao;
@@ -43,11 +43,11 @@ public class LocalSanepar implements Serializable{
         this.endereco = endereco;
     }
 
-    public Integer getMatriculaSanepar() {
+    public String getMatriculaSanepar() {
         return matriculaSanepar;
     }
 
-    public void setMatriculaSanepar(Integer matriculaSanepar) {
+    public void setMatriculaSanepar(String matriculaSanepar) {
         this.matriculaSanepar = matriculaSanepar;
     }
 

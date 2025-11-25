@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <meta charset="UTF-8">
+    <title>Detalhes da Conta</title>
+    
+</head>
+<body>
+
+<div class="container">
+    <h2>Detalhes da Conta</h2>
+
+    <div class="info">
+
+        <div>
+            <span class="label">Número de matrícula:</span>
+            <span class="valor" th:text="${conta.matriculaSanepar}"></span>
+        </div>
+
+        <div>
+            <span class="label">Órgão:</span>
+            <span class="valor" th:text="${conta.orgao}"></span>
+        </div>
+
+        <div>
+            <span class="label">Endereço:</span>
+            <span class="valor" th:text="${conta.endereco}"></span>
+        </div>
+
+        <div>
+            <span class="label">Ano/Mês:</span>
+            <span class="valor" th:text="${conta.ano} + '/' + ${conta.mes}"></span>
+        </div>
+
+        <div>
+            <span class="label">Valor (R$):</span>
+            <span class="valor" th:text="${conta.valor}"></span>
+        </div>
+
+        <div>
+            <span class="label">Vencimento:</span>
+            <span class="valor" th:text="${conta.vencimento}"></span>
+        </div>
+
+        <div>
+            <span class="label">Número de Protocolo:</span>
+            <span class="valor" th:text="${conta.numeroProtocolo}"></span>
+        </div>
+
+        <div>
+            <span class="label">Data de Envio:</span>
+            <span class="valor" th:text="${conta.dataEnvioPagamento}"></span>
+        </div>
+
+        <div>
+            <span class="label">Conta Inativa:</span>
+            <span class="valor" th:text="${conta.contaInativa} ? 'Não' : 'Sim'"></span>
+        </div>
+
+        <div>
+            <span class="label">Consumo (m³):</span>
+            <span class="valor" th:text="${conta.m3}"></span>
+        </div>
+
+    </div>
+
+    <div class="botoes">
+        <a th:href="@{'/editar-conta-sanepar/' + ${conta.id} + '/' + ${conta.idLocalSanepar}}" class="botao botao-editar">Editar</a>
+        <a th:href="@{'/remover-conta-sanepar/' + ${conta.id}}" class="botao botao-excluir"
+           onclick="return confirm('Tem certeza que deseja excluir esta conta?')">Excluir</a>
+        <button class="botao" onclick="window.history.back()">Voltar</button>
+    </div>
+</div>
+
+</body>
+</html>

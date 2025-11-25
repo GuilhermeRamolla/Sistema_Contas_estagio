@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,47 +45,151 @@ public class ContasController {
 
 
     @GetMapping(value={"/index", "/"})
-    public String mostrarListaContas(Model model) {
+    public String mostrarListaContas(
+            @RequestParam(required = false) String dataVencimentoInicio,
+            @RequestParam(required = false) String dataVencimentoFim,
+            @RequestParam(required = false) String inscricaoSercomtel,
+            @RequestParam(required = false) String matriculaSanepar,
+            @RequestParam(required = false) String idCopel,
+            Model model) {
 
         List<Map<String, Object>> contas = new ArrayList<>();
+        LocalDate hoje = LocalDate.now();
 
-        // COPEL
-        for (ContaCopel conta : contaCopelRepository.findAll()) {
-            Map<String, Object> item = new HashMap<>();
-            item.put("grupo", "COPEL");
-            item.put("id", conta.getId());
-            item.put("valor", conta.getValor());
-            item.put("orgao", conta.getLocalCopel().getOrgao());
-            item.put("endereco", conta.getLocalCopel().getEndereco());
-            item.put("vencimento", conta.getVencimento());
-            contas.add(item);
+        //Converte datas
+        LocalDate dataInicio = dataVencimentoInicio != null && !dataVencimentoInicio.isEmpty()
+                ? LocalDate.parse(dataVencimentoInicio) : null;
+        LocalDate dataFim = dataVencimentoFim != null && !dataVencimentoFim.isEmpty()
+                ? LocalDate.parse(dataVencimentoFim) : null;
+
+        //Verifica por filtros esepcificos
+        boolean temFiltroEspecifico = (idCopel != null && !idCopel.isEmpty()) ||
+                (matriculaSanepar != null && !matriculaSanepar.isEmpty()) ||
+                (inscricaoSercomtel != null && !inscricaoSercomtel.isEmpty());
+
+        //COPEL
+        if (!temFiltroEspecifico || (idCopel != null && !idCopel.isEmpty())) {
+            Iterable<ContaCopel> contasCopel;
+            if (idCopel != null && !idCopel.isEmpty()) {
+                LocalCopel localCopel = localCopelRepository.findByIdCopel(idCopel);
+                if (localCopel != null) {
+                    contasCopel = contaCopelRepository.findByLocalCopelId(localCopel.getId());
+                } else {
+                    contasCopel = new ArrayList<>();
+                }
+            } else {
+                contasCopel = contaCopelRepository.findAll();
+            }
+
+            for (ContaCopel conta : contasCopel) {
+                // Aplicar filtro de data se fornecido
+                if (dataInicio != null && conta.getVencimento().isBefore(dataInicio)) continue;
+                if (dataFim != null && conta.getVencimento().isAfter(dataFim)) continue;
+
+                Map<String, Object> item = new HashMap<>();
+                item.put("grupo", "COPEL");
+                item.put("id", conta.getId());
+                item.put("valor", conta.getValor());
+                item.put("orgao", conta.getLocalCopel().getOrgao());
+                item.put("endereco", conta.getLocalCopel().getEndereco());
+                item.put("mes", conta.getMes());
+                item.put("ano", conta.getAno());
+
+                if(conta.getDataEnvioPagamento() != null) {
+                    item.put("status", "PAGA");
+                } else if (!hoje.isAfter(conta.getVencimento())){
+                    item.put("status", "PENDENTE");
+                } else {
+                    item.put("status", "VENCIDA");
+                }
+                contas.add(item);
+            }
         }
 
-        // SANEPAR
-        for (ContaSanepar conta : contaSaneparRepository.findAll()) {
-            Map<String, Object> item = new HashMap<>();
-            item.put("grupo", "SANEPAR");
-            item.put("id", conta.getId());
-            item.put("valor", conta.getValor());
-            item.put("orgao", conta.getLocalSanepar().getOrgao());
-            item.put("endereco", conta.getLocalSanepar().getEndereco());
-            item.put("vencimento", conta.getVencimento());
-            contas.add(item);
+        //SANEPAR
+        if (!temFiltroEspecifico || (matriculaSanepar != null && !matriculaSanepar.isEmpty())) {
+            Iterable<ContaSanepar> contasSanepar;
+            if (matriculaSanepar != null && !matriculaSanepar.isEmpty()) {
+                LocalSanepar localSanepar = localSaneparRepository.findByMatriculaSanepar(matriculaSanepar);
+                if (localSanepar != null) {
+                    contasSanepar = contaSaneparRepository.findByLocalSaneparId(localSanepar.getId());
+                } else {
+                    contasSanepar = new ArrayList<>();
+                }
+            } else {
+                contasSanepar = contaSaneparRepository.findAll();
+            }
+
+            for (ContaSanepar conta : contasSanepar) {
+                if (dataInicio != null && conta.getVencimento().isBefore(dataInicio)) continue;
+                if (dataFim != null && conta.getVencimento().isAfter(dataFim)) continue;
+
+                Map<String, Object> item = new HashMap<>();
+                item.put("grupo", "SANEPAR");
+                item.put("id", conta.getId());
+                item.put("valor", conta.getValor());
+                item.put("orgao", conta.getLocalSanepar().getOrgao());
+                item.put("endereco", conta.getLocalSanepar().getEndereco());
+                item.put("mes", conta.getMes());
+                item.put("ano", conta.getAno());
+
+                if(conta.getDataEnvioPagamento() != null) {
+                    item.put("status", "PAGA");
+                } else if (!hoje.isAfter(conta.getVencimento())){
+                    item.put("status", "PENDENTE");
+                } else {
+                    item.put("status", "VENCIDA");
+                }
+                contas.add(item);
+            }
         }
 
-        // SERCOMTEL
-        for (ContaSercomtel conta : contaSercomtelRepository.findAll()) {
-            Map<String, Object> item = new HashMap<>();
-            item.put("grupo", "SERCOMTEL");
-            item.put("id", conta.getId());
-            item.put("valor", conta.getValor());
-            item.put("orgao", conta.getLocalSercomtel().getOrgao());
-            item.put("endereco", conta.getLocalSercomtel().getEndereco());
-            item.put("vencimento", conta.getVencimento());
-            contas.add(item);
+        //SERCOMTEL
+        if (!temFiltroEspecifico || (inscricaoSercomtel != null && !inscricaoSercomtel.isEmpty())) {
+            Iterable<ContaSercomtel> contasSercomtel;
+            if (inscricaoSercomtel != null && !inscricaoSercomtel.isEmpty()) {
+                LocalSercomtel localSercomtel = localSercomtelRepository.findByInscricaoSercomtel(inscricaoSercomtel);
+                if (localSercomtel != null) {
+                    contasSercomtel = contaSercomtelRepository.findByLocalSercomtelId(localSercomtel.getId());
+                } else {
+                    contasSercomtel = new ArrayList<>();
+                }
+            } else {
+                contasSercomtel = contaSercomtelRepository.findAll();
+            }
+
+            for (ContaSercomtel conta : contasSercomtel) {
+                if (dataInicio != null && conta.getVencimento().isBefore(dataInicio)) continue;
+                if (dataFim != null && conta.getVencimento().isAfter(dataFim)) continue;
+
+                Map<String, Object> item = new HashMap<>();
+                item.put("grupo", "SERCOMTEL");
+                item.put("id", conta.getId());
+                item.put("valor", conta.getValor());
+                item.put("orgao", conta.getLocalSercomtel().getOrgao());
+                item.put("endereco", conta.getLocalSercomtel().getEndereco());
+                item.put("mes", conta.getMes());
+                item.put("ano", conta.getAno());
+
+                if(conta.getDataEnvioPagamento() != null) {
+                    item.put("status", "PAGA");
+                } else if (!hoje.isAfter(conta.getVencimento())){
+                    item.put("status", "PENDENTE");
+                } else {
+                    item.put("status", "VENCIDA");
+                }
+                contas.add(item);
+            }
         }
 
         model.addAttribute("contas", contas);
+        model.addAttribute("filtros", Map.of(
+                "dataVencimentoInicio", dataVencimentoInicio != null ? dataVencimentoInicio : "",
+                "dataVencimentoFim", dataVencimentoFim != null ? dataVencimentoFim : "",
+                "inscricaoSercomtel", inscricaoSercomtel != null ? inscricaoSercomtel : "",
+                "matriculaSanepar", matriculaSanepar != null ? matriculaSanepar : "",
+                "idCopel", idCopel != null ? idCopel : ""
+        ));
 
         return "index";
     }
